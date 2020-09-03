@@ -313,6 +313,15 @@ shared_ptr<AbstractChatRoom> CorePrivate::createChatRoom(const shared_ptr<ChatRo
 			return nullptr;
 		}
 
+		if (!params->isGroup()) {
+			// Prevent multiple 1-1 conference based chat room with same local/remote addresses
+			chatRoom = q->findOneToOneChatRoom(localAddr, participants.front(), false, true, params->isEncrypted());
+			if (chatRoom != nullptr) {
+				lWarning() << "Found already existing 1-1 chat room that matches, using this one";
+				return chatRoom;
+			}
+		}
+
 		chatRoom = createClientGroupChatRoom(params->getSubject(),
 						     IdentityAddress(conferenceFactoryUri),
 						     ConferenceId(IdentityAddress(), localAddr),
@@ -513,6 +522,39 @@ void CorePrivate::replaceChatRoom (const shared_ptr<AbstractChatRoom> &replacedC
 	}
 }
 
+shared_ptr<AbstractChatRoom> CorePrivate::findExhumableOneToOneChatRoom (
+		const IdentityAddress &localAddress,
+		const IdentityAddress &participantAddress,
+		bool encrypted) {
+	for (auto it = chatRoomsById.begin(); it != chatRoomsById.end(); it++) {
+		const auto &chatRoom = it->second;
+		const IdentityAddress &curLocalAddress = chatRoom->getLocalAddress();
+		ChatRoom::CapabilitiesMask capabilities = chatRoom->getCapabilities();
+
+		if (chatRoom->getState() == ChatRoom::State::Terminated
+				&& capabilities & ChatRoom::Capabilities::Conference
+				&& capabilities & ChatRoom::Capabilities::OneToOne
+				&& encrypted == bool(capabilities & ChatRoom::Capabilities::Encrypted)) {
+			if (localAddress.getAddressWithoutGruu() == curLocalAddress.getAddressWithoutGruu()
+					&& participantAddress.getAddressWithoutGruu() == chatRoom->getParticipants().front()->getAddress()) {
+				return chatRoom;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+void CorePrivate::updateChatRoomConferenceId (const shared_ptr<AbstractChatRoom> &chatRoom, ConferenceId oldConferenceId) {
+	const ConferenceId &newConferenceId = chatRoom->getConferenceId();
+	lInfo() << "Chat room [" << oldConferenceId << "] has been exhumed into [" << newConferenceId << "]";
+
+	chatRoomsById.erase(oldConferenceId);
+	chatRoomsById[newConferenceId] = chatRoom;
+
+	mainDb->updateChatRoomConferenceId(oldConferenceId, newConferenceId);
+}
+
 // -----------------------------------------------------------------------------
 
 static bool compare_chat_room (const shared_ptr<AbstractChatRoom>& first, const shared_ptr<AbstractChatRoom>& second) {
@@ -589,6 +631,7 @@ shared_ptr<AbstractChatRoom> Core::findOneToOneChatRoom (
 	const IdentityAddress &localAddress,
 	const IdentityAddress &participantAddress,
 	bool basicOnly,
+	bool conferenceOnly,
 	bool encrypted
 ) const {
 	L_D();
@@ -619,7 +662,8 @@ shared_ptr<AbstractChatRoom> Core::findOneToOneChatRoom (
 		// One to one basic chat room (addresses without gruu)
 		// The peer address must match the participantAddress argument
 		if (
-			(capabilities & ChatRoom::Capabilities::Basic) &&
+			!conferenceOnly && 
+				(capabilities & ChatRoom::Capabilities::Basic) &&
 			localAddress.getAddressWithoutGruu() == curLocalAddress.getAddressWithoutGruu() &&
 			participantAddress.getAddressWithoutGruu() == chatRoom->getPeerAddress().getAddressWithoutGruu()
 		)

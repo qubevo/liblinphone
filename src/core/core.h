@@ -125,6 +125,7 @@ public:
 		const IdentityAddress &localAddress,
 		const IdentityAddress &participantAddress,
 		bool basicOnly,
+		bool conferenceOnly,
 		bool encrypted
 	) const;
 

@@ -135,6 +135,13 @@ public:
 	IdentityAddress getDefaultLocalAddress(const IdentityAddress *peerAddress, bool withGruu) const;
 	
 	void replaceChatRoom (const std::shared_ptr<AbstractChatRoom> &replacedChatRoom, const std::shared_ptr<AbstractChatRoom> &newChatRoom);
+
+	void updateChatRoomConferenceId (const std::shared_ptr<AbstractChatRoom> &chatRoom, ConferenceId newConferenceId);
+	std::shared_ptr<AbstractChatRoom> findExhumableOneToOneChatRoom (
+		const IdentityAddress &localAddress,
+		const IdentityAddress &participantAddress,
+		bool encrypted);
+
 	void doLater(const std::function<void ()> &something);
 	belle_sip_main_loop_t *getMainLoop();
 	bool basicToFlexisipChatroomMigrationEnabled()const;

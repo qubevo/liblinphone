@@ -43,6 +43,7 @@ std::ostream& operator<<(std::ostream& lhs, AbstractChatRoom::State e) {
 		case AbstractChatRoom::State::Terminated: lhs << "Terminated"; break;
 		case AbstractChatRoom::State::TerminationFailed: lhs << "TerminationFailed"; break;
 		case AbstractChatRoom::State::Deleted: lhs << "Deleted"; break;
+		case AbstractChatRoom::State::ExhumePending: lhs << "ExhumePending"; break;
 	}
 	return lhs;
 }

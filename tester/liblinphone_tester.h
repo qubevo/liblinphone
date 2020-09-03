@@ -230,6 +230,7 @@ typedef struct _stats {
 	int number_of_LinphoneChatRoomStateTerminated;
 	int number_of_LinphoneChatRoomStateTerminationFailed;
 	int number_of_LinphoneChatRoomStateDeleted;
+	int number_of_LinphoneChatRoomStateExhumePending;
 	int number_of_LinphoneChatRoomEphemeralTimerStarted;
 	int number_of_LinphoneChatRoomEphemeralDeleted;
 	int number_of_X3dhUserCreationSuccess;

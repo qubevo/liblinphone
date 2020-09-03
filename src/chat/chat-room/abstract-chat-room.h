@@ -61,7 +61,8 @@ public:
 		TerminationPending = LinphoneChatRoomStateTerminationPending,
 		Terminated = LinphoneChatRoomStateTerminated,
 		TerminationFailed = LinphoneChatRoomStateTerminationFailed,
-		Deleted
+		Deleted = LinphoneChatRoomStateDeleted,
+		ExhumePending
 	};
 
 	enum class Capabilities{
