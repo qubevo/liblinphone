@@ -58,6 +58,22 @@
 // =============================================================================
 
 // -----------------------------------------------------------------------------
+// Account.
+// -----------------------------------------------------------------------------
+
+/**
+ * Object that represents a Linphone Account.
+ * @ingroup account
+ */
+typedef struct _LinphoneAccount LinphoneAccount;
+
+/**
+ * Object that is used to set the different parameters of a #LinphoneAccount.
+ * @ingroup account
+ */
+typedef struct _LinphoneAccountParams LinphoneAccountParams;
+
+// -----------------------------------------------------------------------------
 // Address.
 // -----------------------------------------------------------------------------
 
