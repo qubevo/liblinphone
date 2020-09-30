@@ -239,6 +239,7 @@ typedef struct _LinphoneCoreVTable{
 	LinphoneCoreCbsAudioDeviceChangedCb audio_device_changed;
 	LinphoneCoreCbsAudioDevicesListUpdatedCb audio_devices_list_updated;
 	LinphoneCoreCbsImeeUserRegistrationCb imee_user_registration;
+	LinphoneCoreCbsAccountRegistrationStateChangedCb account_registration_state_changed;
 	void *user_data; /**<User data associated with the above callbacks */
 } LinphoneCoreVTable;
 
@@ -334,6 +335,7 @@ LINPHONE_PUBLIC LinphoneCoreCbsGlobalStateChangedCb linphone_core_cbs_get_global
  * Set the #LinphoneCoreCbsRegistrationStateChangedCb callback.
  * @param cbs A #LinphoneCoreCbs. @notnil
  * @param cb The callback.
+ * @deprecated 30/09/2020. see linphone_account_cbs_set_registration_state_changed()
  */
 LINPHONE_PUBLIC void linphone_core_cbs_set_registration_state_changed(LinphoneCoreCbs *cbs, LinphoneCoreCbsRegistrationStateChangedCb cb);
 
@@ -341,6 +343,7 @@ LINPHONE_PUBLIC void linphone_core_cbs_set_registration_state_changed(LinphoneCo
  * Get the #LinphoneCoreCbsRegistrationStateChangedCb callback.
  * @param cbs A #LinphoneCoreCbs. @notnil
  * @return The callback.
+ * @deprecated 30/09/2020. see linphone_account_cbs_get_registration_state_changed()
  */
 LINPHONE_PUBLIC LinphoneCoreCbsRegistrationStateChangedCb linphone_core_cbs_get_registration_state_changed(LinphoneCoreCbs *cbs);
 
@@ -924,6 +927,20 @@ LINPHONE_PUBLIC void linphone_core_cbs_set_ec_calibration_audio_init(LinphoneCor
  * @param cb The callback to use
  */
 LINPHONE_PUBLIC void linphone_core_cbs_set_ec_calibration_audio_uninit(LinphoneCoreCbs *cbs, LinphoneCoreCbsEcCalibrationAudioUninitCb cb);
+
+/**
+ * Set the account registration state changed callback.
+ * @param cbs #LinphoneCoreCbs object. @notnil
+ * @param cb The account registration state changed callback to be used.
+ */
+LINPHONE_PUBLIC void linphone_core_cbs_set_account_registration_state_changed(LinphoneCoreCbs *cbs, LinphoneCoreCbsAccountRegistrationStateChangedCb cb);
+
+/**
+ * Get the account registration state changed callback.
+ * @param cbs #LinphoneCoreCbs object. @notnil
+ * @return The current account registration state changed callback.
+ */
+LINPHONE_PUBLIC LinphoneCoreCbsAccountRegistrationStateChangedCb linphone_core_cbs_get_account_registration_state_changed(LinphoneCoreCbs *cbs);
 
 /**
  * @}
@@ -1793,6 +1810,50 @@ LINPHONE_PUBLIC LinphoneProxyConfig * linphone_core_get_default_proxy_config(con
  * @param config The proxy configuration to use as the default one. @maybenil
 **/
 LINPHONE_PUBLIC void linphone_core_set_default_proxy_config(LinphoneCore *core, LinphoneProxyConfig *config);
+
+/**
+ * @}
+ */
+
+/**
+ * @addtogroup accounts
+ * @{
+ */
+
+/**
+ * Removes an account.
+ *
+ * #LinphoneCore will then automatically unregister and place the account
+ * on a deleted list. For that reason, a removed account does NOT need to be freed.
+ * @param core #LinphoneCore object @notnil
+ * @param account the #LinphoneAccount to remove @notnil
+**/
+LINPHONE_PUBLIC void linphone_core_remove_account(LinphoneCore *core, LinphoneAccount *account);
+
+/**
+ * Returns the default account, that is the one used to determine the current identity.
+ * @param core #LinphoneCore object @notnil
+ * @return The default account. @maybenil
+**/
+LINPHONE_PUBLIC LinphoneAccount * linphone_core_get_default_account(const LinphoneCore *core);
+
+/**
+ * Returns an unmodifiable list of entered accounts.
+ * @param core The #LinphoneCore object @notnil
+ * @return \bctbx_list{LinphoneAccount} @maybenil
+**/
+LINPHONE_PUBLIC const bctbx_list_t *linphone_core_get_account_list(const LinphoneCore *core);
+
+/**
+ * Sets the default account.
+ *
+ * This default account must be part of the list of already entered LinphoneAccount.
+ * Toggling it as default will make #LinphoneCore use the identity associated with
+ * the account in all incoming and outgoing calls.
+ * @param core #LinphoneCore object @notnil
+ * @param account The account to use as the default one. @maybenil
+**/
+LINPHONE_PUBLIC void linphone_core_set_default_account(LinphoneCore *core, LinphoneAccount *account);
 
 /**
  * @}

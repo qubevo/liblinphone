@@ -321,6 +321,9 @@ void _linphone_conference_notify_participant_admin_status_changed(LinphoneConfer
 void _linphone_conference_notify_state_changed(LinphoneConference *conference, LinphoneConferenceState newState);
 void _linphone_conference_notify_subject_changed(LinphoneConference *conference, const char *subject);
 
+/*account*/
+void _linphone_account_notify_registration_state_changed(LinphoneAccount* account, LinphoneRegistrationState state, const char *message);
+
 /*chat*/
 LinphoneChatRoom *_linphone_server_group_chat_room_new (LinphoneCore *core, LinphonePrivate::SalCallOp *op);
 void linphone_chat_room_set_call(LinphoneChatRoom *cr, LinphoneCall *call);

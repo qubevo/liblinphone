@@ -1271,8 +1271,22 @@ LinphoneProxyConfig * linphone_core_get_default_proxy_config(const LinphoneCore 
 	return lc->default_proxy;
 }
 
+LinphoneAccount * linphone_core_get_default_account(const LinphoneCore *lc) {
+	return NULL;
+}
+
 const bctbx_list_t *linphone_core_get_proxy_config_list(const LinphoneCore *lc){
 	return lc->sip_conf.proxies;
+}
+
+const bctbx_list_t *linphone_core_get_account_list(const LinphoneCore *lc){
+	return NULL;
+}
+
+void linphone_core_remove_account(LinphoneCore *core, LinphoneAccount *account) {
+}
+
+void linphone_core_set_default_account(LinphoneCore *core, LinphoneAccount *account) {
 }
 
 void linphone_proxy_config_write_to_config_file(LpConfig *config, LinphoneProxyConfig *cfg, int index)

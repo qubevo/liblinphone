@@ -242,6 +242,28 @@ LINPHONE_PUBLIC char* linphone_account_normalize_phone_number(LinphoneAccount *a
 LINPHONE_PUBLIC LinphoneAddress* linphone_account_normalize_sip_uri(LinphoneAccount *account, const char* username);
 
 /**
+ * Add a listener in order to be notified of #LinphoneAccount events.
+ * @param account The #LinphoneAccount object to monitor. @notnil
+ * @param cbs A #LinphoneAccountCbs object holding the callbacks you need. @notnil
+ */
+LINPHONE_PUBLIC void linphone_account_add_callbacks(LinphoneAccount *message, LinphoneAccountCbs *cbs);
+
+/**
+ * Remove a listener from a #LinphoneAccount.
+ * @param account The #LinphoneAccount object. @notnil
+ * @param cbs #LinphoneAccountCbs object to remove. @notnil
+ */
+LINPHONE_PUBLIC void linphone_account_remove_callbacks(LinphoneAccount *message, LinphoneAccountCbs *cbs);
+
+/**
+ * Gets the current LinphoneAccountCbs.
+ * This is meant only to be called from a callback to be able to get the user_data associated with the #LinphoneAccountCbs that is calling the callback.
+ * @param account The #LinphoneAccount object. @notnil
+ * @return The #LinphoneAccountCbs that has called the last callback. @maybenil
+ */
+LINPHONE_PUBLIC LinphoneAccountCbs *linphone_account_get_current_callbacks(const LinphoneAccount *message);
+
+/**
  * @}
  */
 

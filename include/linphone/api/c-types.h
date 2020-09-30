@@ -73,6 +73,12 @@ typedef struct _LinphoneAccount LinphoneAccount;
  */
 typedef struct _LinphoneAccountParams LinphoneAccountParams;
 
+/**
+ * An object to handle the callbacks for the handling of #LinphoneAccount objects.
+ * @ingroup account
+ */
+typedef struct _LinphoneAccountCbs LinphoneAccountCbs;
+
 // -----------------------------------------------------------------------------
 // Address.
 // -----------------------------------------------------------------------------

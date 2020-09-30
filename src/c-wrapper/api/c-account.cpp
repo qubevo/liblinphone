@@ -19,7 +19,10 @@
 
 #include "account/account.h"
 #include "account/account-params.h"
+#include "c-wrapper/internal/c-tools.h"
 #include "linphone/api/c-account.h"
+#include "linphone/api/c-account-cbs.h"
+#include "linphone/wrapper_utils.h"
 
 // =============================================================================
 
@@ -120,4 +123,39 @@ char* linphone_account_normalize_phone_number(LinphoneAccount *account, const ch
 
 LinphoneAddress* linphone_account_normalize_sip_uri(LinphoneAccount *account, const char* username) {
 	return NULL;
+}
+
+void linphone_account_add_callbacks(LinphoneAccount *account, LinphoneAccountCbs *cbs) {
+	Account::toCpp(account)->addCallbacks(linphone_account_cbs_ref(cbs));
+}
+
+void linphone_account_remove_callbacks(LinphoneAccount *account, LinphoneAccountCbs *cbs) {
+	Account::toCpp(account)->removeCallbacks(cbs);
+	linphone_account_cbs_unref(cbs);
+}
+
+LinphoneAccountCbs *linphone_account_get_current_callbacks(const LinphoneAccount *account) {
+	return Account::toCpp(account)->getCurrentCallbacks();
+}
+
+void linphone_account_set_current_callbacks(LinphoneAccount *account, LinphoneAccountCbs *cbs) {
+	Account::toCpp(account)->setCurrentCallbacks(cbs);
+}
+
+const bctbx_list_t *linphone_account_get_callbacks_list(const LinphoneAccount *account) {
+	return L_GET_C_LIST_FROM_CPP_LIST(Account::toCpp(account)->getCallbacksList());
+}
+
+#define NOTIFY_IF_EXIST(cbName, functionName, ...) \
+	auto& list = Account::toCpp(account)->getCallbacksList(); \
+	for (const auto &cbs : list) { \
+		Account::toCpp(account)->setCurrentCallbacks(cbs); \
+		LinphoneAccountCbs ## cbName ## Cb cb = linphone_account_cbs_get_ ## functionName (cbs); \
+		if (cb) \
+			cb(__VA_ARGS__); \
+	} \
+	Account::toCpp(account)->setCurrentCallbacks(nullptr);
+
+void _linphone_account_notify_registration_state_changed(LinphoneAccount *account, LinphoneRegistrationState state, const char *message) {
+	NOTIFY_IF_EXIST(RegistrationStateChanged, registration_state_changed, account, state, message)
 }

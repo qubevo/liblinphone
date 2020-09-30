@@ -27,7 +27,7 @@ using namespace std;
 
 LINPHONE_BEGIN_NAMESPACE
 
-Account::Account (LinphoneCore *lc, std::shared_ptr<AccountParams> params) {
+Account::Account (LinphoneCore *lc, std::shared_ptr<AccountParams> &params) {
 	mCore = lc;
 }
 
@@ -46,10 +46,10 @@ Account& Account::operator= (const Account &other) {
 	return *this;
 }
 
-void Account::setAccountParams (std::shared_ptr<AccountParams> params) {
+void Account::setAccountParams (std::shared_ptr<AccountParams> &params) {
 }
 
-std::shared_ptr<AccountParams> Account::getAccountParams () {
+std::shared_ptr<AccountParams>& Account::getAccountParams () {
 	return mParams;
 }
 
@@ -92,7 +92,7 @@ void Account::setCustomheader (const std::string& headerName, const std::string&
 void Account::setPresencePublishEvent (LinphoneEvent *presencePublishEvent) {
 }
 
-void Account::setDependency (std::shared_ptr<Account> dependency) {
+void Account::setDependency (std::shared_ptr<Account> &dependency) {
 }
 
 int Account::getAuthFailure () const {
@@ -152,7 +152,7 @@ LinphoneEvent* Account::getPresencePublishEvent () const {
 	return mPresencePublishEvent;
 }
 
-std::shared_ptr<Account> Account::getDependency () const {
+std::shared_ptr<Account>& Account::getDependency () {
 	return mDependency;
 }
 
@@ -180,6 +180,26 @@ const LinphoneAuthInfo* Account::findAuthInfo () const {
 
 int Account::getUnreadChatMessageCount () const {
 	return -1;
+}
+
+void Account::addCallbacks (LinphoneAccountCbs *callbacks) {
+	mCallbacksList.push_back(callbacks);
+}
+
+void Account::removeCallbacks (LinphoneAccountCbs *callbacks) {
+	mCallbacksList.remove(callbacks);
+}
+
+void Account::setCurrentCallbacks (LinphoneAccountCbs *callbacks) {
+	mCurrentCallbacks = callbacks;
+}
+
+LinphoneAccountCbs* Account::getCurrentCallbacks () const {
+	return mCurrentCallbacks;
+}
+
+const std::list<LinphoneAccountCbs *>& Account::getCallbacksList () const {
+	return mCallbacksList;
 }
 
 LINPHONE_END_NAMESPACE

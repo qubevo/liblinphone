@@ -28,7 +28,7 @@
 
 LINPHONE_BEGIN_NAMESPACE
 
-class LINPHONE_PUBLIC AccountParams : public bellesip::HybridObject<LinphoneAccountParams, AccountParams> {
+class AccountParams : public bellesip::HybridObject<LinphoneAccountParams, AccountParams> {
 	friend class Account;
 
 public:

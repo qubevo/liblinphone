@@ -34,9 +34,9 @@
 
 LINPHONE_BEGIN_NAMESPACE
 
-class LINPHONE_PUBLIC Account : public bellesip::HybridObject<LinphoneAccount, Account> {
+class Account : public bellesip::HybridObject<LinphoneAccount, Account> {
 public:
-	Account (LinphoneCore *lc, std::shared_ptr<AccountParams> params);
+	Account (LinphoneCore *lc, std::shared_ptr<AccountParams> &params);
 	Account (const Account &other);
 	~Account ();
 
@@ -44,8 +44,8 @@ public:
 	Account& operator= (const Account &other);
 
 	// Account params configuration
-	void setAccountParams (std::shared_ptr<AccountParams> params);
-	std::shared_ptr<AccountParams> getAccountParams ();
+	void setAccountParams (std::shared_ptr<AccountParams> &params);
+	std::shared_ptr<AccountParams>& getAccountParams ();
 
 	// Setters
 	void setAuthFailure (int authFailure);
@@ -61,7 +61,7 @@ public:
 	void setOp (SalRegisterOp *op);
 	void setCustomheader (const std::string& headerName, const std::string& headerValue);
 	void setPresencePublishEvent (LinphoneEvent *presencePublishEvent);
-	void setDependency (std::shared_ptr<Account> dependency);
+	void setDependency (std::shared_ptr<Account> &dependency);
 
 	// Getters
 	int getAuthFailure () const;
@@ -78,7 +78,7 @@ public:
 	SalRegisterOp* getOp() const;
 	const std::string getCustomHeader (const std::string& headerName) const;
 	LinphoneEvent* getPresencePublishEvent () const;
-	std::shared_ptr<Account> getDependency () const;
+	std::shared_ptr<Account>& getDependency ();
 
 	// Other
 	void refreshRegister ();
@@ -88,6 +88,14 @@ public:
 	bool avpfEnabled () const;
 	const LinphoneAuthInfo* findAuthInfo () const;
 	int getUnreadChatMessageCount () const;
+
+	// Callbacks
+	void addCallbacks (LinphoneAccountCbs *callbacks);
+	void removeCallbacks (LinphoneAccountCbs *callbacks);
+	void setCurrentCallbacks (LinphoneAccountCbs *callbacks);
+	LinphoneAccountCbs* getCurrentCallbacks () const;
+
+	const std::list<LinphoneAccountCbs *>& getCallbacksList () const;
 
 private:
 	std::shared_ptr<AccountParams> mParams;
@@ -117,6 +125,9 @@ private:
 	LinphoneEvent *mPresencePublishEvent;
 
 	std::shared_ptr<Account> mDependency;
+
+	std::list<LinphoneAccountCbs *> mCallbacksList;
+	LinphoneAccountCbs *mCurrentCallbacks = nullptr;
 };
 
 LINPHONE_END_NAMESPACE

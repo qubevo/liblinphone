@@ -111,7 +111,6 @@ add_definitions(-DBCTBX_LOG_DOMAIN="liblinphone")
 set(LINPHONE_CXX_OBJECTS_PRIVATE_HEADER_FILES
 	account/account.h
 	account/account-params.h
-	address/address-p.h
 	address/address.h
 	address/identity-address.h
 	address/identity-address-parser.h
@@ -293,6 +292,7 @@ set(LINPHONE_CXX_OBJECTS_SOURCE_FILES
 	auth-info/auth-info.cpp
 	auth-info/auth-stack.cpp
 	c-wrapper/api/c-account.cpp
+	c-wrapper/api/c-account-cbs.cpp
 	c-wrapper/api/c-account-params.cpp
 	c-wrapper/api/c-address.cpp
 	c-wrapper/api/c-audio-device.cpp

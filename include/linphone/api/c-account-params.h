@@ -57,7 +57,7 @@ LINPHONE_PUBLIC LinphoneAccountParams* linphone_account_params_clone(const Linph
 /**
  * Take a reference on a #LinphoneAccountParams.
  * @param params The #LinphoneAccountParams object. @notnil
- * @return the same #LinphoneAccountParams object. @notnill
+ * @return the same #LinphoneAccountParams object. @notnil
  */
 LINPHONE_PUBLIC LinphoneAccountParams* linphone_account_params_ref(LinphoneAccountParams *params);
 
@@ -271,7 +271,7 @@ LINPHONE_PUBLIC const bctbx_list_t* linphone_account_params_get_routes_addresses
 /**
  * Get the identity address of the account params.
  * @param params The #LinphoneAccountParams object. @notnil
- * @return The SIP identity that belongs to this account paramsuration. @maybenil
+ * @return The SIP identity that belongs to this account params. @maybenil
 **/
 LINPHONE_PUBLIC const LinphoneAddress *linphone_account_params_get_identity_address(const LinphoneAccountParams *params);
 
@@ -478,14 +478,14 @@ LINPHONE_PUBLIC void linphone_account_params_set_conference_factory_uri(Linphone
 
 /**
  * If enabled, the proxy will be used as the only route.
- * @param params The #LinphoneAccountParams object. @notnill
+ * @param params The #LinphoneAccountParams object. @notnil
  * @param enable TRUE to enable, FALSE otherwise.
  */
 LINPHONE_PUBLIC void linphone_account_params_set_outbound_proxy_enabled(LinphoneAccountParams *params, bool_t enable);
 
 /**
  * Tell if the proxy is used as the only route.
- * @param params The #LinphoneAccountParams object. @notnill
+ * @param params The #LinphoneAccountParams object. @notnil
  * @return enable TRUE if enabled, FALSE otherwise.
  */
 LINPHONE_PUBLIC bool_t linphone_account_params_get_outbound_proxy_enabled(LinphoneAccountParams *params);
